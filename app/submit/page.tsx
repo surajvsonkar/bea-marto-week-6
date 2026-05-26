@@ -10,6 +10,7 @@ import { getOrCreateSessionId } from '@/lib/session/anonymous';
 import { ImageUpload } from '@/components/ImageUpload';
 import { Send, ArrowLeft, Loader2 } from 'lucide-react';
 import type { Category } from '@/types/database';
+import Link from 'next/link';
 
 const submissionSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -106,13 +107,13 @@ export default function SubmitPage() {
           <p className="text-surface-400 mb-6">
             Your business card has been submitted for review. You&apos;ll be added to the directory once approved.
           </p>
-          <a
+          <Link
             href="/"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-500 text-white hover:bg-brand-600 transition-all text-sm font-semibold"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Directory
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -121,10 +122,10 @@ export default function SubmitPage() {
   return (
     <div className="min-h-screen mesh-gradient">
       <div className="max-w-2xl mx-auto px-4 py-12">
-        <a href="/" className="inline-flex items-center gap-2 text-sm text-surface-400 hover:text-brand-400 mb-8 transition-colors">
+        <Link href="/" className="inline-flex items-center gap-2 text-sm text-surface-400 hover:text-brand-400 mb-8 transition-colors">
           <ArrowLeft className="w-4 h-4" />
           Back to Directory
-        </a>
+        </Link>
 
         <h1 className="text-3xl font-bold text-white mb-2">Submit Your Card</h1>
         <p className="text-surface-400 mb-8">

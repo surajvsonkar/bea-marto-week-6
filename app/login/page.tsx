@@ -2,6 +2,7 @@
 
 import { signInWithGoogle } from '@/lib/auth/actions';
 import { Sparkles, Chrome } from 'lucide-react';
+import Link from 'next/link';
 
 export default function LoginPage() {
   return (
@@ -47,12 +48,12 @@ export default function LoginPage() {
 
         {/* Back link */}
         <div className="mt-6 text-center">
-          <a
+          <Link
             href="/"
             className="text-sm text-surface-400 hover:text-brand-400 transition-colors"
           >
             ← Back to Directory
-          </a>
+          </Link>
         </div>
       </div>
     </div>

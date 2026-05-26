@@ -18,13 +18,22 @@ import OpenAI from 'openai';
  */
 
 const isOpenAI = process.env.AI_PROVIDER === 'openai';
-
-const client = new OpenAI({
-  baseURL: isOpenAI ? undefined : 'https://api.deepseek.com',
-  apiKey: isOpenAI ? process.env.OPENAI_API_KEY : process.env.DEEPSEEK_API_KEY,
-});
-
 const MODEL = isOpenAI ? 'gpt-4o-mini' : 'deepseek-chat';
+
+function getClient(): OpenAI {
+  const apiKey = isOpenAI ? process.env.OPENAI_API_KEY : process.env.DEEPSEEK_API_KEY;
+  if (!apiKey) {
+    throw new Error(
+      `AI API key is missing. Please configure ${
+        isOpenAI ? 'OPENAI_API_KEY' : 'DEEPSEEK_API_KEY'
+      } in environment variables.`
+    );
+  }
+  return new OpenAI({
+    baseURL: isOpenAI ? undefined : 'https://api.deepseek.com',
+    apiKey,
+  });
+}
 
 // Simple in-memory rate limiter
 const requestLog: number[] = [];
@@ -57,6 +66,7 @@ export async function generateText(
     throw new Error('Rate limit exceeded. Please wait a moment and try again.');
   }
 
+  const client = getClient();
   const completion = await client.chat.completions.create({
     model: MODEL,
     messages: [
@@ -80,6 +90,7 @@ export async function generateTextStream(
     throw new Error('Rate limit exceeded. Please wait a moment and try again.');
   }
 
+  const client = getClient();
   const stream = await client.chat.completions.create({
     model: MODEL,
     messages: [

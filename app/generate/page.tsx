@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import Link from 'next/link';
 import { toast } from 'sonner';
 import { Sparkles, Send, Loader2, History, ArrowLeft, Bot, User } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
@@ -38,20 +39,20 @@ export default function GeneratePage() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  useEffect(() => {
-    if (user) {
-      loadHistory();
-    }
-  }, [user]);
-
-  const loadHistory = async () => {
+  const loadHistory = useCallback(async () => {
     const { data } = await supabase
       .from('ai_generations')
       .select('*')
       .order('created_at', { ascending: false })
       .limit(20);
     setHistory((data as Generation[]) || []);
-  };
+  }, [supabase]);
+
+  useEffect(() => {
+    if (user) {
+      loadHistory();
+    }
+  }, [user, loadHistory]);
 
   const handleGenerate = async () => {
     if (!name || !title || !company) {
@@ -154,9 +155,9 @@ export default function GeneratePage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
-            <a href="/" className="p-2 rounded-lg glass-card text-surface-400 hover:text-white transition-colors">
+            <Link href="/" className="p-2 rounded-lg glass-card text-surface-400 hover:text-white transition-colors">
               <ArrowLeft className="w-5 h-5" />
-            </a>
+            </Link>
             <div>
               <h1 className="text-2xl font-bold text-white flex items-center gap-2">
                 <Sparkles className="w-6 h-6 text-brand-400" />
